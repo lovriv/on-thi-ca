@@ -16,6 +16,7 @@
     --math:#3b82f6; --physics:#6366f1; --chemistry:#14b8a6;
     --biology:#10b981; --reading:#8b5cf6; --writing:#f59e0b;
     --ink:#1e293b; --muted:#64748b; --line:#e2e8f0; --done:#10b981;
+    --ok:#059669; --bad:#dc2626;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{
@@ -29,27 +30,23 @@
   header h1{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;}
   header p{color:var(--muted);font-size:.9rem;margin-top:4px;}
 
-  /* Day buttons */
   .days{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:10px;}
   .daybtn{
     border:2px solid var(--line);background:#fff;border-radius:11px;
     padding:9px 11px;font-size:.84rem;font-weight:700;cursor:pointer;
     color:var(--muted);transition:all .15s ease;min-width:74px;text-align:center;
-    position:relative;
   }
   .daybtn:hover{transform:translateY(-1px);}
   .daybtn.active{background:#6366f1;color:#fff;border-color:#6366f1;}
   .daybtn.done{border-color:var(--done);color:var(--done);}
   .daybtn.done.active{background:var(--done);color:#fff;border-color:var(--done);}
-  .daybtn .chk{font-size:.74rem;}
   .overall{text-align:center;font-size:.8rem;color:var(--muted);margin-bottom:16px;}
   .overall b{color:var(--ink);}
 
-  /* Card */
   .card{
-    background:#fff;border-radius:18px;padding:26px 24px;
+    background:#fff;border-radius:18px;padding:24px 22px;
     box-shadow:0 10px 30px -12px rgba(30,41,59,.25);
-    border-top:6px solid var(--line);min-height:260px;
+    border-top:6px solid var(--line);min-height:240px;
   }
   .card.s-Math{border-top-color:var(--math);}
   .card.s-Physics{border-top-color:var(--physics);}
@@ -58,11 +55,9 @@
   .card.s-Reading{border-top-color:var(--reading);}
   .card.s-Writing{border-top-color:var(--writing);}
 
-  .tags{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
-  .badge{
-    font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
-    padding:4px 10px;border-radius:6px;color:#fff;
-  }
+  .tags{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap;}
+  .badge{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+    padding:4px 10px;border-radius:6px;color:#fff;}
   .badge.s-Math{background:var(--math);}
   .badge.s-Physics{background:var(--physics);}
   .badge.s-Chemistry{background:var(--chemistry);}
@@ -73,51 +68,63 @@
   .sub{font-size:.74rem;color:#94a3b8;font-weight:600;
     border:1px solid var(--line);padding:2px 8px;border-radius:5px;}
 
-  .passage{
-    background:#f8fafc;border:1px solid var(--line);border-radius:10px;
-    padding:14px 16px;margin-bottom:16px;max-height:240px;overflow-y:auto;
-    font-size:.86rem;line-height:1.6;
-  }
+  .passage{background:#f8fafc;border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px;margin-bottom:14px;max-height:230px;overflow-y:auto;
+    font-size:.86rem;line-height:1.6;}
   .passage h4{font-size:.86rem;margin-bottom:8px;color:var(--ink);}
   .passage p{margin-bottom:8px;}
 
-  .question{font-size:1.06rem;line-height:1.6;font-weight:500;white-space:pre-wrap;}
+  .question{font-size:1.05rem;line-height:1.6;font-weight:500;white-space:pre-wrap;margin-bottom:14px;}
 
-  .answer{
-    margin-top:18px;padding:16px 18px;border-radius:12px;
-    background:#ecfdf5;border:1px solid #a7f3d0;animation:pop .25s ease;
+  .ansLabel{font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:6px;}
+  textarea#userAns{
+    width:100%;border:2px solid var(--line);border-radius:10px;padding:11px 13px;
+    font-family:inherit;font-size:.98rem;color:var(--ink);resize:vertical;line-height:1.5;
   }
+  textarea#userAns:focus{outline:none;border-color:#6366f1;}
+
+  .verdict{margin-top:14px;padding:12px 16px;border-radius:10px;font-weight:700;
+    font-size:.95rem;animation:pop .2s ease;}
+  .verdict.ok{background:#ecfdf5;border:1px solid #a7f3d0;color:var(--ok);}
+  .verdict.bad{background:#fef2f2;border:1px solid #fecaca;color:var(--bad);}
+  .verdict.ask{background:#fffbeb;border:1px solid #fcd34d;color:#b45309;}
+  .verdict.note{background:#eef2ff;border:1px solid #c7d2fe;color:#4338ca;}
   @keyframes pop{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .judge{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .judge button{flex:1;min-width:130px;border:none;border-radius:9px;padding:10px;
+    font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;}
+  .jOk{background:var(--ok);color:#fff;}
+  .jBad{background:var(--bad);color:#fff;}
+
+  .answer{margin-top:14px;padding:14px 16px;border-radius:11px;
+    background:#f8fafc;border:1px solid var(--line);}
   .answer .lbl{font-size:.74rem;font-weight:700;text-transform:uppercase;
-    letter-spacing:.05em;color:#059669;margin-bottom:6px;}
-  .answer .ans-text{font-size:1.02rem;font-weight:700;line-height:1.55;margin-bottom:8px;white-space:pre-wrap;}
-  .answer .exp{font-size:.9rem;line-height:1.6;color:#334155;white-space:pre-wrap;}
+    letter-spacing:.05em;color:var(--ok);margin-bottom:6px;}
+  .answer .ans-text{font-size:1rem;font-weight:700;line-height:1.55;margin-bottom:8px;white-space:pre-wrap;}
+  .answer .exp{font-size:.89rem;line-height:1.6;color:#334155;white-space:pre-wrap;}
 
   .hidden{display:none;}
 
-  .welcome{text-align:center;padding:36px 10px;color:var(--muted);}
+  .welcome{text-align:center;padding:34px 10px;color:var(--muted);}
   .welcome .big{font-size:2.6rem;margin-bottom:10px;}
-  .welcome p{line-height:1.6;}
-  .welcome.done .big{font-size:3rem;}
+  .welcome p{line-height:1.7;}
 
-  .controls{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
-  button.act{
-    flex:1;min-width:150px;border:none;border-radius:12px;padding:14px 18px;
-    font-size:.98rem;font-weight:700;cursor:pointer;transition:all .15s ease;
-    font-family:inherit;
-  }
+  .controls{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  button.act{flex:1;min-width:120px;border:none;border-radius:12px;padding:13px 16px;
+    font-size:.95rem;font-weight:700;cursor:pointer;transition:all .15s ease;font-family:inherit;}
   button.act:hover{transform:translateY(-2px);box-shadow:0 6px 16px -6px rgba(0,0,0,.3);}
   button.act:active{transform:translateY(0);}
-  button.act:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+  button.act:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-check{background:#059669;color:#fff;width:100%;flex:none;margin-top:12px;}
+  .btn-prev{background:#fff;color:var(--ink);border:2px solid var(--line);}
   .btn-next{background:#475569;color:#fff;}
-  .btn-reveal{background:#059669;color:#fff;}
 
-  .progressbar{height:8px;background:var(--line);border-radius:99px;margin-top:16px;overflow:hidden;}
+  .progressbar{height:8px;background:var(--line);border-radius:99px;margin-top:14px;overflow:hidden;}
   .progressbar > div{height:100%;background:#6366f1;width:0;transition:width .25s ease;}
-  .stats{text-align:center;margin-top:10px;font-size:.82rem;color:var(--muted);}
+  .stats{text-align:center;margin-top:10px;font-size:.84rem;color:var(--muted);}
   .stats b{color:var(--ink);}
-  .hint{text-align:center;margin-top:8px;font-size:.76rem;color:#94a3b8;}
-  footer{text-align:center;margin-top:24px;font-size:.76rem;color:#94a3b8;}
+  .stats .sOk{color:var(--ok);} .stats .sBad{color:var(--bad);}
+  footer{text-align:center;margin-top:22px;font-size:.76rem;color:#94a3b8;}
 </style>
 </head>
 <body>
@@ -134,7 +141,8 @@
     <div class="welcome" id="welcome">
       <div class="big">📅</div>
       <p><b>Chọn một Ngày ở trên để bắt đầu.</b><br>
-      Mỗi ngày có sẵn các câu hỏi cần làm — cứ làm hết là xong ngày đó!</p>
+      Mỗi câu: đọc đề → <b>điền câu trả lời</b> → bấm <b>Kiểm tra</b> → xem đúng/sai.<br>
+      Có nút <b>◀ Câu trước</b> để xem lại câu đã làm.</p>
     </div>
 
     <div id="qcontent" class="hidden">
@@ -145,8 +153,18 @@
       </div>
       <div class="passage hidden" id="passage"></div>
       <div class="question" id="question"></div>
+
+      <div class="ansLabel" id="ansLabel">✏️ Câu trả lời của em:</div>
+      <textarea id="userAns" rows="3" placeholder="Gõ câu trả lời vào đây…"></textarea>
+      <button class="act btn-check" id="btnCheck">✓ Kiểm tra</button>
+
+      <div class="verdict hidden" id="verdict"></div>
+      <div class="judge hidden" id="judge">
+        <button class="jOk" id="jOk">✓ Em làm ĐÚNG</button>
+        <button class="jBad" id="jBad">✗ Em làm SAI</button>
+      </div>
       <div class="answer hidden" id="answer">
-        <div class="lbl">✅ Đáp án</div>
+        <div class="lbl">✅ Đáp án đúng</div>
         <div class="ans-text" id="ansText"></div>
         <div class="exp" id="ansExp"></div>
       </div>
@@ -154,18 +172,16 @@
   </div>
 
   <div class="controls">
-    <button class="act btn-reveal" id="btnReveal" disabled>👁️ Xem đáp án</button>
-    <button class="act btn-next" id="btnNext" disabled>➡️ Câu tiếp theo</button>
+    <button class="act btn-prev" id="btnPrev" disabled>◀ Câu trước</button>
+    <button class="act btn-next" id="btnNext" disabled>Câu tiếp theo ▶</button>
   </div>
 
   <div class="progressbar"><div id="bar"></div></div>
   <div class="stats" id="stats">Chưa chọn ngày nào</div>
-  <div class="hint">💡 Phím tắt: <b>Space</b> = xem đáp án &nbsp;•&nbsp; <b>Enter</b> = câu tiếp theo</div>
 
   <footer>Lộ trình 13 ngày · chạy offline · bám đề Chuyên Anh Đề Án 2025-2026</footer>
 </div>
 
-<!-- ===== KHO CÂU HỎI ===== -->
 <script>window.QBANK = window.QBANK || [];</script>
 <script src="data/math.js"></script>
 <script src="data/math-b.js"></script>
@@ -175,10 +191,7 @@
 <script src="data/reading.js"></script>
 <script src="data/writing.js"></script>
 
-<!-- ===== LỊCH 13 NGÀY ===== -->
 <script>
-/* Mỗi ngày: topics = chủ đề Toán/Khoa học; reading = chỉ số đoạn đọc (0-9) hoặc null;
-   writing = chỉ số nhóm đề viết (0-5) hoặc null. */
 const DAYS = [
   { day:1,  topics:["Unit 1 — Significant figures & standard form","1. Forces & motion"], reading:0, writing:null },
   { day:2,  topics:["Unit 2 — 2D shapes & 3D solids","2. Energy","1. Materials, polymers & composites"], reading:1, writing:null },
@@ -195,13 +208,11 @@ const DAYS = [
   { day:13, topics:["6. Acids, salts & ions","7. Control, ecology and exchange"], reading:9, writing:5 }
 ];
 
-/* ===== LOGIC ===== */
 const SUBJ_VN = {Math:"Toán",Physics:"Vật lý",Chemistry:"Hóa học",
                  Biology:"Sinh học",Reading:"Đọc hiểu",Writing:"Viết"};
 const BANK = (window.QBANK || []).filter(q => q && q.q && q.a);
 const el = id => document.getElementById(id);
 
-/* Gom câu Đọc hiểu theo từng đoạn (theo object passage p) */
 function groupBy(subject, keyFn){
   const groups = [], seen = [];
   BANK.forEach(q => {
@@ -216,7 +227,6 @@ function groupBy(subject, keyFn){
 const readingGroups = groupBy("Reading", q => q.p || q.topic);
 const writingGroups = groupBy("Writing", q => q.topic);
 
-/* Dựng danh sách câu hỏi cho từng ngày */
 const dayQ = {};
 DAYS.forEach(d => {
   let arr = [];
@@ -226,59 +236,82 @@ DAYS.forEach(d => {
   dayQ[d.day] = arr;
 });
 
-/* Lưu tiến độ vào trình duyệt */
-const SAVEKEY = "onthi_ca_13ngay";
+/* ---- Lưu tiến độ ---- */
+const SAVEKEY = "onthi_ca_v2";
 function loadState(){
-  try { return JSON.parse(localStorage.getItem(SAVEKEY)) || {pos:{},done:{}}; }
-  catch(e){ return {pos:{},done:{}}; }
+  try { return JSON.parse(localStorage.getItem(SAVEKEY)) || {}; } catch(e){ return {}; }
 }
 function saveState(){ try { localStorage.setItem(SAVEKEY, JSON.stringify(state)); } catch(e){} }
 let state = loadState();
+function dayRec(n){
+  if(!state[n]) state[n] = { pos:0, done:false, rec:[] };
+  const len = dayQ[n].length;
+  while(state[n].rec.length < len) state[n].rec.push({ a:"", v:null });
+  return state[n];
+}
 
-let curDay = null, curList = [], curIdx = 0, answerShown = false;
+let curDay = null, curList = [], curIdx = 0;
+
+/* ---- Chuẩn hoá để so đáp án ---- */
+function norm(s){
+  s = (s||"").toString().toLowerCase();
+  const sub="₀₁₂₃₄₅₆₇₈₉", sup="⁰¹²³⁴⁵⁶⁷⁸⁹";
+  s = s.replace(/[₀-₉]/g,c=>sub.indexOf(c)).replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g,c=>String(sup.indexOf(c)));
+  s = s.replace(/[−]/g,"-").replace(/×/g,"x").replace(/÷/g,"/");
+  s = s.replace(/[\s°$,.()\[\]{}'"`*]/g,"");
+  return s;
+}
+/* trả về 'correct' | 'wrong' | 'unsure' */
+function autoCheck(typed, q){
+  const t = norm(typed);
+  if(!t) return 'unsure';
+  if(q.sub === "MCQ"){
+    const tm = (typed.trim().match(/[A-Da-d]/)||[])[0];
+    const cm = (q.a.trim().match(/[A-D]/)||[])[0];
+    if(tm && cm) return tm.toUpperCase() === cm ? 'correct' : 'wrong';
+    return 'unsure';
+  }
+  const c = norm(q.a);
+  if(t === c) return 'correct';
+  const first = norm(q.a.split(/[(—\/]| or | hoặc /i)[0]);
+  if(first && first.length >= 2 && t === first) return 'correct';
+  return 'unsure';
+}
 
 function buildDays(){
   const box = el("days"); box.innerHTML = "";
   DAYS.forEach(d => {
-    const total = dayQ[d.day].length;
-    const done = state.done[d.day];
+    const st = state[d.day];
+    const done = st && st.done;
     const b = document.createElement("button");
     b.className = "daybtn" + (done ? " done" : "") + (curDay === d.day ? " active" : "");
-    b.innerHTML = `Ngày ${d.day}` + (done ? ` <span class="chk">✓</span>` : "");
-    b.title = `Ngày ${d.day} — ${total} câu`;
+    b.innerHTML = `Ngày ${d.day}` + (done ? " ✓" : "");
+    b.title = `Ngày ${d.day} — ${dayQ[d.day].length} câu`;
     b.onclick = () => selectDay(d.day);
     box.appendChild(b);
   });
-  const doneCount = DAYS.filter(d => state.done[d.day]).length;
-  el("overall").innerHTML = `Đã hoàn thành: <b>${doneCount}/13</b> ngày`;
+  const dc = DAYS.filter(d => state[d.day] && state[d.day].done).length;
+  el("overall").innerHTML = `Đã hoàn thành: <b>${dc}/13</b> ngày`;
 }
 
 function selectDay(n){
-  curDay = n;
-  curList = dayQ[n];
-  curIdx = state.pos[n] || 0;
-  if(curIdx >= curList.length) curIdx = 0;   /* làm lại nếu đã xong */
-  answerShown = false;
-  buildDays();
+  curDay = n; curList = dayQ[n];
   if(curList.length === 0){
-    showMessage("📭", "Ngày này chưa có câu hỏi. Hãy thử mở lại trang (Ctrl+F5).");
+    buildDays();
+    el("qcontent").classList.add("hidden");
+    el("welcome").classList.remove("hidden");
+    el("welcome").innerHTML = '<div class="big">📭</div><p>Ngày này chưa có câu hỏi.<br>Hãy mở lại trang (Ctrl+F5).</p>';
     return;
   }
+  const st = dayRec(n);
+  curIdx = Math.min(st.pos || 0, curList.length - 1);
+  buildDays();
   render();
-}
-
-function showMessage(icon, html, done){
-  el("qcontent").classList.add("hidden");
-  const w = el("welcome");
-  w.className = "welcome" + (done ? " done" : "");
-  w.classList.remove("hidden");
-  w.innerHTML = `<div class="big">${icon}</div><p>${html}</p>`;
-  el("btnReveal").disabled = true;
-  el("btnNext").disabled = !done ? true : false;
 }
 
 function render(){
   const q = curList[curIdx];
+  const rec = state[curDay].rec[curIdx];
   el("welcome").classList.add("hidden");
   el("qcontent").classList.remove("hidden");
   el("card").className = "card s-" + q.s;
@@ -286,7 +319,6 @@ function render(){
   el("badge").className = "badge s-" + q.s;
   el("badge").textContent = SUBJ_VN[q.s] || q.s;
   el("topic").textContent = q.topic || "";
-
   const subEl = el("sub");
   if(q.sub){ subEl.textContent = q.sub; subEl.classList.remove("hidden"); }
   else subEl.classList.add("hidden");
@@ -298,71 +330,154 @@ function render(){
   } else pBox.classList.add("hidden");
 
   el("question").textContent = q.q;
-  el("answer").classList.add("hidden");
+
+  const isWriting = (q.s === "Writing");
+  el("ansLabel").textContent = isWriting ? "✏️ Viết bài của em (giấy hoặc gõ vào đây):" : "✏️ Câu trả lời của em:";
+  const ta = el("userAns");
+  ta.value = rec.a || "";
+  ta.rows = isWriting ? 8 : 3;
+  el("btnCheck").textContent = isWriting ? "📄 Xem bài mẫu" : "✓ Kiểm tra";
+
   el("ansText").textContent = q.a;
   el("ansExp").innerHTML = q.e || "";
-  answerShown = false;
 
-  el("btnReveal").disabled = false;
-  el("btnReveal").textContent = "👁️ Xem đáp án";
+  /* hiện lại trạng thái đã làm */
+  if(rec.v === null){
+    el("verdict").classList.add("hidden");
+    el("judge").classList.add("hidden");
+    el("answer").classList.add("hidden");
+  } else {
+    showResult(rec.v, isWriting, false);
+  }
+
+  el("btnPrev").disabled = (curIdx === 0);
   el("btnNext").disabled = false;
-  el("btnNext").textContent = (curIdx === curList.length - 1)
-    ? "✅ Hoàn thành ngày" : "➡️ Câu tiếp theo";
-
+  el("btnNext").textContent = (curIdx === curList.length - 1) ? "Hoàn thành ngày ✓" : "Câu tiếp theo ▶";
   updateStats();
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-function toggleAnswer(){
-  if(curDay === null || el("qcontent").classList.contains("hidden")) return;
-  answerShown = !answerShown;
-  el("answer").classList.toggle("hidden", !answerShown);
-  el("btnReveal").textContent = answerShown ? "🙈 Ẩn đáp án" : "👁️ Xem đáp án";
+function showResult(v, isWriting, justChecked){
+  el("answer").classList.remove("hidden");
+  const vd = el("verdict");
+  vd.classList.remove("hidden");
+  el("judge").classList.add("hidden");
+  if(isWriting){
+    vd.className = "verdict note";
+    vd.textContent = "📝 Bài viết chấm theo rubric — đối chiếu với bài mẫu bên dưới nhé.";
+  } else if(v === 1){
+    vd.className = "verdict ok"; vd.textContent = "✅ Chính xác! Em làm ĐÚNG.";
+  } else if(v === 0){
+    vd.className = "verdict bad"; vd.textContent = "❌ Chưa đúng — xem lại đáp án đúng bên dưới nhé.";
+  }
 }
 
-function nextQuestion(){
-  if(curDay === null) return;
-  if(curIdx >= curList.length - 1){
-    /* hoàn thành ngày */
-    state.done[curDay] = true;
-    state.pos[curDay] = curList.length;
-    saveState();
-    buildDays();
-    const dc = DAYS.filter(d => state.done[d.day]).length;
-    showMessage("🎉",
-      `<b>Hoàn thành Ngày ${curDay}!</b><br>Đã làm xong <b>${curList.length} câu</b>.<br>`
-      + (dc < 13 ? `Còn ${13 - dc} ngày nữa — chọn ngày tiếp theo nhé! 💪`
-                 : `Em đã hoàn thành CẢ 13 NGÀY! Tuyệt vời! 🏆`),
-      true);
-    el("stats").innerHTML = `Ngày ${curDay}: <b>đã xong ✓</b>`;
-    el("bar").style.width = "100%";
-    el("btnNext").textContent = "🔁 Làm lại ngày này";
-    el("btnNext").onclick = () => { state.pos[curDay] = 0; saveState(); selectDay(curDay); el("btnNext").onclick = nextQuestion; };
+function doCheck(){
+  const q = curList[curIdx];
+  const rec = state[curDay].rec[curIdx];
+  rec.a = el("userAns").value;
+  const isWriting = (q.s === "Writing");
+
+  el("answer").classList.remove("hidden");
+
+  if(isWriting){
+    rec.v = 2; saveState();
+    showResult(2, true, true); finishCheck();
     return;
   }
-  curIdx++;
-  state.pos[curDay] = curIdx;
+  const res = autoCheck(rec.a, q);
+  if(res === 'correct'){
+    rec.v = 1; saveState(); showResult(1, false, true);
+  } else if(res === 'wrong'){
+    rec.v = 0; saveState(); showResult(0, false, true);
+  } else {
+    /* không chắc → bé tự đánh giá khi đã thấy đáp án đúng */
+    const vd = el("verdict");
+    vd.classList.remove("hidden");
+    vd.className = "verdict ask";
+    vd.textContent = "🤔 So câu trả lời của em với ĐÁP ÁN ĐÚNG bên dưới, rồi tự đánh giá:";
+    el("judge").classList.remove("hidden");
+  }
+  finishCheck();
+}
+function finishCheck(){
+  buildDays(); updateStats();
+}
+function selfJudge(ok){
+  const rec = state[curDay].rec[curIdx];
+  rec.v = ok ? 1 : 0; saveState();
+  showResult(rec.v, false, true);
+  buildDays(); updateStats();
+}
+
+function go(delta){
+  if(curDay === null) return;
+  const ni = curIdx + delta;
+  if(ni < 0) return;
+  if(ni >= curList.length){
+    /* hoàn thành ngày */
+    state[curDay].done = true;
+    state[curDay].pos = curList.length - 1;
+    saveState(); buildDays();
+    showComplete();
+    return;
+  }
+  curIdx = ni;
+  state[curDay].pos = curIdx;
   saveState();
   render();
 }
 
-function updateStats(){
-  const total = curList.length;
-  el("stats").innerHTML =
-    `<b>Ngày ${curDay}</b> · Câu <b>${curIdx + 1}</b> / ${total}`;
-  el("bar").style.width = ((curIdx) / total * 100) + "%";
+function showComplete(){
+  el("qcontent").classList.add("hidden");
+  const rec = state[curDay].rec;
+  let ok = 0, bad = 0, wr = 0;
+  rec.forEach(r => { if(r.v===1)ok++; else if(r.v===0)bad++; else if(r.v===2)wr++; });
+  const graded = ok + bad;
+  const pct = graded ? Math.round(ok/graded*100) : 0;
+  const dc = DAYS.filter(d => state[d.day] && state[d.day].done).length;
+  el("welcome").classList.remove("hidden");
+  el("welcome").innerHTML =
+    `<div class="big">🎉</div>
+     <p><b>Hoàn thành Ngày ${curDay}!</b><br>
+     Kết quả: <b style="color:var(--ok)">Đúng ${ok}</b> · <b style="color:var(--bad)">Sai ${bad}</b>`
+     + (graded ? ` &nbsp;(${pct}%)` : "")
+     + (wr ? `<br><span style="font-size:.85rem">+ ${wr} bài viết (chấm theo rubric)</span>` : "")
+     + `<br><br>` + (dc < 13
+        ? `Đã xong <b>${dc}/13</b> ngày — chọn ngày tiếp theo nhé! 💪`
+        : `Em đã hoàn thành CẢ 13 NGÀY! Tuyệt vời! 🏆`)
+     + `</p>`;
+  el("btnPrev").disabled = false;
+  el("btnPrev").textContent = "◀ Xem lại ngày này";
+  el("btnNext").disabled = true;
+  el("bar").style.width = "100%";
+  el("stats").innerHTML = `Ngày ${curDay}: <b>đã xong ✓</b> — <span class="sOk">Đúng ${ok}</span> · <span class="sBad">Sai ${bad}</span>`;
 }
 
-el("btnReveal").onclick = toggleAnswer;
-el("btnNext").onclick = nextQuestion;
-document.addEventListener("keydown", e => {
-  if(curDay === null) return;
-  if(e.code === "Space"){ e.preventDefault(); toggleAnswer(); }
-  else if(e.code === "Enter"){ e.preventDefault(); nextQuestion(); }
-});
+function updateStats(){
+  const rec = state[curDay].rec;
+  let ok=0, bad=0, total=0;
+  rec.forEach(r => { if(r.v===1){ok++;total++;} else if(r.v===0){bad++;total++;} });
+  el("stats").innerHTML =
+    `<b>Ngày ${curDay}</b> · Câu <b>${curIdx+1}</b>/${curList.length}`
+    + ` &nbsp;|&nbsp; <span class="sOk">Đúng ${ok}</span> · <span class="sBad">Sai ${bad}</span>`;
+  el("bar").style.width = (curIdx/curList.length*100) + "%";
+}
 
-/* Khởi động */
+el("btnCheck").onclick = doCheck;
+el("jOk").onclick = () => selfJudge(true);
+el("jBad").onclick = () => selfJudge(false);
+el("btnPrev").onclick = () => {
+  if(el("qcontent").classList.contains("hidden")){ /* từ màn hoàn thành */
+    el("welcome").classList.add("hidden");
+    el("btnPrev").textContent = "◀ Câu trước";
+    curIdx = curList.length - 1; render();
+  } else go(-1);
+};
+el("btnNext").onclick = () => go(1);
+
 if(BANK.length === 0){
-  showMessage("🚧", "<b>Kho câu hỏi chưa tải được.</b><br>Hãy mở lại trang (Ctrl+F5).");
+  el("welcome").innerHTML = '<div class="big">🚧</div><p><b>Kho câu hỏi chưa tải được.</b><br>Hãy mở lại trang (Ctrl+F5).</p>';
   el("days").innerHTML = "";
 } else {
   buildDays();
