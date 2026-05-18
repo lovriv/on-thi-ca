@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luyện tập Flashcard — Chuyên Anh Đề Án</title>
+<title>Luyện tập 13 ngày — Chuyên Anh Đề Án</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6366f1">
 <link rel="icon" href="icon-192.png">
@@ -15,7 +15,7 @@
   :root{
     --math:#3b82f6; --physics:#6366f1; --chemistry:#14b8a6;
     --biology:#10b981; --reading:#8b5cf6; --writing:#f59e0b;
-    --ink:#1e293b; --muted:#64748b; --line:#e2e8f0;
+    --ink:#1e293b; --muted:#64748b; --line:#e2e8f0; --done:#10b981;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{
@@ -25,47 +25,25 @@
   }
   .app{max-width:780px;margin:0 auto;}
 
-  header{text-align:center;margin-bottom:18px;}
-  header h1{font-size:1.55rem;font-weight:800;letter-spacing:-.02em;}
-  header p{color:var(--muted);font-size:.92rem;margin-top:4px;}
+  header{text-align:center;margin-bottom:16px;}
+  header h1{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;}
+  header p{color:var(--muted);font-size:.9rem;margin-top:4px;}
 
-  /* Subject chips */
-  .filters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px;}
-  .chip{
-    border:2px solid var(--line);background:#fff;border-radius:999px;
-    padding:7px 15px;font-size:.86rem;font-weight:600;cursor:pointer;
-    color:var(--muted);transition:all .15s ease;
+  /* Day buttons */
+  .days{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:10px;}
+  .daybtn{
+    border:2px solid var(--line);background:#fff;border-radius:11px;
+    padding:9px 11px;font-size:.84rem;font-weight:700;cursor:pointer;
+    color:var(--muted);transition:all .15s ease;min-width:74px;text-align:center;
+    position:relative;
   }
-  .chip:hover{transform:translateY(-1px);}
-  .chip.active{color:#fff;border-color:transparent;}
-  .chip[data-s="All"].active{background:#475569;}
-  .chip[data-s="Math"].active{background:var(--math);}
-  .chip[data-s="Physics"].active{background:var(--physics);}
-  .chip[data-s="Chemistry"].active{background:var(--chemistry);}
-  .chip[data-s="Biology"].active{background:var(--biology);}
-  .chip[data-s="Reading"].active{background:var(--reading);}
-  .chip[data-s="Writing"].active{background:var(--writing);}
-  .chip .count{opacity:.7;font-weight:500;}
-
-  /* Topic + exam-focus row */
-  .topicbar{display:flex;justify-content:center;align-items:center;gap:10px;
-    margin-bottom:18px;flex-wrap:wrap;}
-  .topicbar select{
-    font-family:inherit;font-size:.86rem;font-weight:600;color:var(--ink);
-    border:2px solid var(--line);border-radius:10px;padding:8px 14px;
-    background:#fff;cursor:pointer;max-width:100%;
-  }
-  #topicSel{min-width:240px;}
-  .topicbar select:disabled{opacity:.5;cursor:not-allowed;}
-  .examtoggle{
-    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
-    border:2px solid #fcd34d;background:#fffbeb;border-radius:10px;
-    padding:7px 13px;font-size:.84rem;font-weight:700;color:#b45309;
-    transition:all .15s ease;
-  }
-  .examtoggle:hover{transform:translateY(-1px);}
-  .examtoggle.on{background:#f59e0b;border-color:#f59e0b;color:#fff;}
-  .examtoggle input{display:none;}
+  .daybtn:hover{transform:translateY(-1px);}
+  .daybtn.active{background:#6366f1;color:#fff;border-color:#6366f1;}
+  .daybtn.done{border-color:var(--done);color:var(--done);}
+  .daybtn.done.active{background:var(--done);color:#fff;border-color:var(--done);}
+  .daybtn .chk{font-size:.74rem;}
+  .overall{text-align:center;font-size:.8rem;color:var(--muted);margin-bottom:16px;}
+  .overall b{color:var(--ink);}
 
   /* Card */
   .card{
@@ -94,8 +72,6 @@
   .topic{font-size:.8rem;color:var(--muted);font-weight:600;}
   .sub{font-size:.74rem;color:#94a3b8;font-weight:600;
     border:1px solid var(--line);padding:2px 8px;border-radius:5px;}
-  .star{font-size:.72rem;font-weight:700;color:#b45309;background:#fffbeb;
-    border:1px solid #fcd34d;padding:3px 8px;border-radius:5px;}
 
   .passage{
     background:#f8fafc;border:1px solid var(--line);border-radius:10px;
@@ -119,9 +95,10 @@
 
   .hidden{display:none;}
 
-  .welcome{text-align:center;padding:30px 10px;color:var(--muted);}
+  .welcome{text-align:center;padding:36px 10px;color:var(--muted);}
   .welcome .big{font-size:2.6rem;margin-bottom:10px;}
   .welcome p{line-height:1.6;}
+  .welcome.done .big{font-size:3rem;}
 
   .controls{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
   button.act{
@@ -132,10 +109,12 @@
   button.act:hover{transform:translateY(-2px);box-shadow:0 6px 16px -6px rgba(0,0,0,.3);}
   button.act:active{transform:translateY(0);}
   button.act:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
-  .btn-new{background:#475569;color:#fff;}
+  .btn-next{background:#475569;color:#fff;}
   .btn-reveal{background:#059669;color:#fff;}
 
-  .stats{text-align:center;margin-top:16px;font-size:.82rem;color:var(--muted);}
+  .progressbar{height:8px;background:var(--line);border-radius:99px;margin-top:16px;overflow:hidden;}
+  .progressbar > div{height:100%;background:#6366f1;width:0;transition:width .25s ease;}
+  .stats{text-align:center;margin-top:10px;font-size:.82rem;color:var(--muted);}
   .stats b{color:var(--ink);}
   .hint{text-align:center;margin-top:8px;font-size:.76rem;color:#94a3b8;}
   footer{text-align:center;margin-top:24px;font-size:.76rem;color:#94a3b8;}
@@ -144,25 +123,18 @@
 <body>
 <div class="app">
   <header>
-    <h1>🎴 Luyện tập Flashcard</h1>
+    <h1>📅 Luyện tập 13 Ngày</h1>
     <p>Chuyên Anh Đề Án — Lớp 10 (Sở GD&amp;ĐT TP.HCM)</p>
   </header>
 
-  <div class="filters" id="filters"></div>
-  <div class="topicbar">
-    <select id="yearSel"></select>
-    <select id="topicSel" disabled><option>— Tất cả chủ đề —</option></select>
-    <label class="examtoggle" id="examToggle" title="Chỉ hiện câu thuộc topic hay ra trong đề thi 2025-2026">
-      <input type="checkbox" id="examChk"> ★ Trọng tâm thi
-    </label>
-  </div>
+  <div class="days" id="days"></div>
+  <div class="overall" id="overall"></div>
 
   <div class="card" id="card">
     <div class="welcome" id="welcome">
-      <div class="big">🎲</div>
-      <p><b>Chọn môn</b> và <b>chủ đề</b> ở trên,<br>rồi nhấn <b>"Câu hỏi mới"</b> để bắt đầu!</p>
-      <p style="margin-top:10px;font-size:.85rem;">
-        Bật <b>★ Trọng tâm thi</b> để chỉ luyện topic hay ra trong đề thật.</p>
+      <div class="big">📅</div>
+      <p><b>Chọn một Ngày ở trên để bắt đầu.</b><br>
+      Mỗi ngày có sẵn các câu hỏi cần làm — cứ làm hết là xong ngày đó!</p>
     </div>
 
     <div id="qcontent" class="hidden">
@@ -170,7 +142,6 @@
         <span class="badge" id="badge"></span>
         <span class="topic" id="topic"></span>
         <span class="sub hidden" id="sub"></span>
-        <span class="star hidden" id="star">★ Trọng tâm thi</span>
       </div>
       <div class="passage hidden" id="passage"></div>
       <div class="question" id="question"></div>
@@ -184,16 +155,17 @@
 
   <div class="controls">
     <button class="act btn-reveal" id="btnReveal" disabled>👁️ Xem đáp án</button>
-    <button class="act btn-new" id="btnNew">🎲 Câu hỏi mới</button>
+    <button class="act btn-next" id="btnNext" disabled>➡️ Câu tiếp theo</button>
   </div>
 
-  <div class="stats" id="stats">Đang tải kho câu hỏi…</div>
-  <div class="hint">💡 Phím tắt: <b>Space</b> = xem đáp án &nbsp;•&nbsp; <b>Enter</b> = câu mới</div>
+  <div class="progressbar"><div id="bar"></div></div>
+  <div class="stats" id="stats">Chưa chọn ngày nào</div>
+  <div class="hint">💡 Phím tắt: <b>Space</b> = xem đáp án &nbsp;•&nbsp; <b>Enter</b> = câu tiếp theo</div>
 
-  <footer>Kho câu hỏi nhúng sẵn · chạy offline · bám đề thi Chuyên Anh Đề Án 2025-2026</footer>
+  <footer>Lộ trình 13 ngày · chạy offline · bám đề Chuyên Anh Đề Án 2025-2026</footer>
 </div>
 
-<!-- ===== KHO CÂU HỎI (mỗi môn 1 file trong data/) ===== -->
+<!-- ===== KHO CÂU HỎI ===== -->
 <script>window.QBANK = window.QBANK || [];</script>
 <script src="data/math.js"></script>
 <script src="data/math-b.js"></script>
@@ -202,223 +174,198 @@
 <script src="data/biology.js"></script>
 <script src="data/reading.js"></script>
 <script src="data/writing.js"></script>
-<script src="data/math-y8.js"></script>
-<script src="data/science-y8.js"></script>
 
-<!-- ===== LOGIC ỨNG DỤNG ===== -->
+<!-- ===== LỊCH 13 NGÀY ===== -->
 <script>
-const SUBJ_ORDER = ["Math","Physics","Chemistry","Biology","Reading","Writing"];
-const SUBJ_VN = {All:"Tất cả",Math:"Toán",Physics:"Vật lý",Chemistry:"Hóa học",
+/* Mỗi ngày: topics = chủ đề Toán/Khoa học; reading = chỉ số đoạn đọc (0-9) hoặc null;
+   writing = chỉ số nhóm đề viết (0-5) hoặc null. */
+const DAYS = [
+  { day:1,  topics:["Unit 1 — Significant figures & standard form","1. Forces & motion"], reading:0, writing:null },
+  { day:2,  topics:["Unit 2 — 2D shapes & 3D solids","2. Energy","1. Materials, polymers & composites"], reading:1, writing:null },
+  { day:3,  topics:["Unit 3 — Quadratics","1. Variation"], reading:2, writing:0 },
+  { day:4,  topics:["Unit 4 — Constructions","3. Speed & motion graphs","2. Atoms & the periodic table"], reading:3, writing:null },
+  { day:5,  topics:["Unit 5 — Inequalities & equations","2. Genes and inheritance"], reading:4, writing:1 },
+  { day:6,  topics:["Unit 6 — Data & averages","4. Machines & moments","3. Reactivity series & metal extraction"], reading:null, writing:null },
+  { day:7,  topics:["Unit 7 — Multiplicative reasoning","3. Evolution and natural selection"], reading:5, writing:2 },
+  { day:8,  topics:["Unit 8 — Scale, ratio & similar shapes","5. Force fields, gravity & magnetism","4. Energy & rates of reaction"], reading:6, writing:null },
+  { day:9,  topics:["Unit 9 — Accuracy, density & pressure","4. Plant processes"], reading:7, writing:3 },
+  { day:10, topics:["Unit 10 — Graphs & simultaneous equations","6. Electricity & magnetism"], reading:8, writing:4 },
+  { day:11, topics:["Unit 11 — Trigonometry","5. Farming and ecosystems","5. Conservation of mass & equations"], reading:null, writing:null },
+  { day:12, topics:["Unit 12 — Probability","7. Heat, differences & waves","6. Health and disease"], reading:null, writing:null },
+  { day:13, topics:["6. Acids, salts & ions","7. Control, ecology and exchange"], reading:9, writing:5 }
+];
+
+/* ===== LOGIC ===== */
+const SUBJ_VN = {Math:"Toán",Physics:"Vật lý",Chemistry:"Hóa học",
                  Biology:"Sinh học",Reading:"Đọc hiểu",Writing:"Viết"};
-
 const BANK = (window.QBANK || []).filter(q => q && q.q && q.a);
-
-let curSubject = "All";
-let curTopic   = "__all__";
-let curYear    = "all";
-let examOnly   = false;
-let pool = [], current = null, seenCount = 0, answerShown = false;
-
 const el = id => document.getElementById(id);
-const isExam = q => q.exam === true;
-const yearMatch = q => curYear === "all" || String(q.year) === curYear;
 
-/* Danh sách môn thực sự có câu hỏi */
-function subjectsPresent(){
-  return SUBJ_ORDER.filter(s => BANK.some(q => q.s === s && yearMatch(q)));
-}
-/* Chủ đề của 1 môn, theo thứ tự xuất hiện trong dữ liệu */
-function topicsOf(subject){
-  const seen = [], out = [];
+/* Gom câu Đọc hiểu theo từng đoạn (theo object passage p) */
+function groupBy(subject, keyFn){
+  const groups = [], seen = [];
   BANK.forEach(q => {
-    if(q.s === subject && q.topic && yearMatch(q) && !seen.includes(q.topic)){
-      seen.push(q.topic); out.push(q.topic);
-    }
+    if(q.s !== subject) return;
+    const k = keyFn(q);
+    let i = seen.indexOf(k);
+    if(i < 0){ seen.push(k); groups.push([]); i = groups.length - 1; }
+    groups[i].push(q);
   });
-  return out;
+  return groups;
 }
-/* 1 topic là "trọng tâm thi" nếu mọi câu trong đó đều exam:true */
-function topicIsFocus(subject, topic){
-  const qs = BANK.filter(q => q.s === subject && q.topic === topic);
-  return qs.length > 0 && qs.every(isExam);
-}
-/* Đếm câu theo bộ lọc exam hiện tại */
-function countFor(subject){
-  return BANK.filter(q => (subject === "All" || q.s === subject)
-                          && yearMatch(q)
-                          && (!examOnly || isExam(q))).length;
-}
+const readingGroups = groupBy("Reading", q => q.p || q.topic);
+const writingGroups = groupBy("Writing", q => q.topic);
 
-/* Bộ chọn Lớp (8 / 9) — chỉ hiện lớp có dữ liệu */
-function buildYears(){
-  const sel = el("yearSel");
-  const years = [...new Set(BANK.map(q => q.year).filter(Boolean))].sort((a,b) => b - a);
-  sel.innerHTML = '<option value="all">📅 Tất cả lớp</option>'
-    + years.map(y => `<option value="${y}">Lớp ${y}</option>`).join("");
-  sel.value = curYear;
-  sel.onchange = () => {
-    curYear = sel.value; curSubject = "All"; curTopic = "__all__";
-    buildFilters(); buildTopics(); refillPool(); nextQuestion();
-  };
-}
+/* Dựng danh sách câu hỏi cho từng ngày */
+const dayQ = {};
+DAYS.forEach(d => {
+  let arr = [];
+  d.topics.forEach(t => { arr = arr.concat(BANK.filter(q => q.topic === t)); });
+  if(d.reading != null && readingGroups[d.reading]) arr = arr.concat(readingGroups[d.reading]);
+  if(d.writing != null && writingGroups[d.writing]) arr = arr.concat(writingGroups[d.writing]);
+  dayQ[d.day] = arr;
+});
 
-function buildFilters(){
-  const box = el("filters"); box.innerHTML = "";
-  const subs = ["All", ...subjectsPresent()];
-  subs.forEach(s => {
-    const chip = document.createElement("button");
-    chip.className = "chip" + (s === curSubject ? " active" : "");
-    chip.dataset.s = s;
-    chip.innerHTML = `${SUBJ_VN[s]} <span class="count">(${countFor(s)})</span>`;
-    chip.onclick = () => {
-      curSubject = s; curTopic = "__all__";
-      buildFilters(); buildTopics(); refillPool(); nextQuestion();
-    };
-    box.appendChild(chip);
+/* Lưu tiến độ vào trình duyệt */
+const SAVEKEY = "onthi_ca_13ngay";
+function loadState(){
+  try { return JSON.parse(localStorage.getItem(SAVEKEY)) || {pos:{},done:{}}; }
+  catch(e){ return {pos:{},done:{}}; }
+}
+function saveState(){ try { localStorage.setItem(SAVEKEY, JSON.stringify(state)); } catch(e){} }
+let state = loadState();
+
+let curDay = null, curList = [], curIdx = 0, answerShown = false;
+
+function buildDays(){
+  const box = el("days"); box.innerHTML = "";
+  DAYS.forEach(d => {
+    const total = dayQ[d.day].length;
+    const done = state.done[d.day];
+    const b = document.createElement("button");
+    b.className = "daybtn" + (done ? " done" : "") + (curDay === d.day ? " active" : "");
+    b.innerHTML = `Ngày ${d.day}` + (done ? ` <span class="chk">✓</span>` : "");
+    b.title = `Ngày ${d.day} — ${total} câu`;
+    b.onclick = () => selectDay(d.day);
+    box.appendChild(b);
   });
+  const doneCount = DAYS.filter(d => state.done[d.day]).length;
+  el("overall").innerHTML = `Đã hoàn thành: <b>${doneCount}/13</b> ngày`;
 }
 
-function buildTopics(){
-  const sel = el("topicSel"); sel.innerHTML = "";
-  if(curSubject === "All"){
-    sel.disabled = true;
-    sel.innerHTML = '<option>— Chọn một môn để lọc chủ đề —</option>';
+function selectDay(n){
+  curDay = n;
+  curList = dayQ[n];
+  curIdx = state.pos[n] || 0;
+  if(curIdx >= curList.length) curIdx = 0;   /* làm lại nếu đã xong */
+  answerShown = false;
+  buildDays();
+  if(curList.length === 0){
+    showMessage("📭", "Ngày này chưa có câu hỏi. Hãy thử mở lại trang (Ctrl+F5).");
     return;
   }
-  sel.disabled = false;
-  const total = BANK.filter(q => q.s === curSubject && yearMatch(q) && (!examOnly || isExam(q))).length;
-  const allOpt = document.createElement("option");
-  allOpt.value = "__all__";
-  allOpt.textContent = `— Tất cả chủ đề (${total} câu) —`;
-  sel.appendChild(allOpt);
-  topicsOf(curSubject).forEach(t => {
-    const n = BANK.filter(q => q.s === curSubject && q.topic === t
-                               && yearMatch(q) && (!examOnly || isExam(q))).length;
-    if(examOnly && n === 0) return;
-    const o = document.createElement("option");
-    o.value = t;
-    o.textContent = (topicIsFocus(curSubject, t) ? "★ " : "") + t + `  (${n})`;
-    sel.appendChild(o);
-  });
-  sel.value = curTopic;
-  if(sel.value !== curTopic){ curTopic = "__all__"; sel.value = "__all__"; }
-  sel.onchange = () => { curTopic = sel.value; refillPool(); nextQuestion(); };
+  render();
 }
 
-function shuffle(a){
-  for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
-}
-
-function filteredQuestions(){
-  return BANK.filter(q => {
-    if(curSubject !== "All" && q.s !== curSubject) return false;
-    if(curSubject !== "All" && curTopic !== "__all__" && q.topic !== curTopic) return false;
-    if(!yearMatch(q)) return false;
-    if(examOnly && !isExam(q)) return false;
-    return true;
-  });
-}
-
-function refillPool(){ pool = shuffle(filteredQuestions().slice()); }
-
-function nextQuestion(){
-  if(pool.length === 0) refillPool();
-  if(pool.length === 0){ showEmpty(); return; }
-  let next = pool.pop();
-  if(next === current && pool.length > 0){ pool.unshift(next); next = pool.pop(); }
-  current = next; answerShown = false;
-  renderCard(); seenCount++; updateStats();
-}
-
-function showEmpty(){
+function showMessage(icon, html, done){
   el("qcontent").classList.add("hidden");
-  el("welcome").classList.remove("hidden");
-  el("welcome").innerHTML =
-    '<div class="big">📭</div><p>Chưa có câu hỏi cho lựa chọn này.<br>'
-    + 'Thử tắt <b>★ Trọng tâm thi</b> hoặc chọn môn / chủ đề khác nhé!</p>';
+  const w = el("welcome");
+  w.className = "welcome" + (done ? " done" : "");
+  w.classList.remove("hidden");
+  w.innerHTML = `<div class="big">${icon}</div><p>${html}</p>`;
   el("btnReveal").disabled = true;
+  el("btnNext").disabled = !done ? true : false;
 }
 
-function renderCard(){
+function render(){
+  const q = curList[curIdx];
   el("welcome").classList.add("hidden");
   el("qcontent").classList.remove("hidden");
-  el("card").className = "card s-" + current.s;
+  el("card").className = "card s-" + q.s;
 
-  el("badge").className = "badge s-" + current.s;
-  el("badge").textContent = SUBJ_VN[current.s] || current.s;
-  el("topic").textContent = current.topic || "";
+  el("badge").className = "badge s-" + q.s;
+  el("badge").textContent = SUBJ_VN[q.s] || q.s;
+  el("topic").textContent = q.topic || "";
 
   const subEl = el("sub");
-  if(current.sub){ subEl.textContent = current.sub; subEl.classList.remove("hidden"); }
+  if(q.sub){ subEl.textContent = q.sub; subEl.classList.remove("hidden"); }
   else subEl.classList.add("hidden");
 
-  el("star").classList.toggle("hidden", !isExam(current));
-
   const pBox = el("passage");
-  if(current.p && current.p.html){
-    pBox.innerHTML = (current.p.title ? `<h4>📖 ${current.p.title}</h4>` : "") + current.p.html;
+  if(q.p && q.p.html){
+    pBox.innerHTML = (q.p.title ? `<h4>📖 ${q.p.title}</h4>` : "") + q.p.html;
     pBox.classList.remove("hidden"); pBox.scrollTop = 0;
   } else pBox.classList.add("hidden");
 
-  el("question").textContent = current.q;
+  el("question").textContent = q.q;
   el("answer").classList.add("hidden");
-  el("ansText").textContent = current.a;
-  el("ansExp").innerHTML = current.e || "";
+  el("ansText").textContent = q.a;
+  el("ansExp").innerHTML = q.e || "";
+  answerShown = false;
 
   el("btnReveal").disabled = false;
   el("btnReveal").textContent = "👁️ Xem đáp án";
+  el("btnNext").disabled = false;
+  el("btnNext").textContent = (curIdx === curList.length - 1)
+    ? "✅ Hoàn thành ngày" : "➡️ Câu tiếp theo";
+
+  updateStats();
 }
 
 function toggleAnswer(){
-  if(!current) return;
+  if(curDay === null || el("qcontent").classList.contains("hidden")) return;
   answerShown = !answerShown;
   el("answer").classList.toggle("hidden", !answerShown);
   el("btnReveal").textContent = answerShown ? "🙈 Ẩn đáp án" : "👁️ Xem đáp án";
 }
 
-function updateStats(){
-  const yr = curYear === "all" ? "" : "Lớp " + curYear + " · ";
-  const scope = curSubject === "All" ? "Tất cả môn"
-    : SUBJ_VN[curSubject] + (curTopic === "__all__" ? "" : " · " + curTopic);
-  el("stats").innerHTML =
-    `Phạm vi: <b>${yr}${scope}</b>${examOnly ? " <b>★</b>" : ""} · `
-    + `Đã xem: <b>${seenCount}</b> câu · Còn lại: <b>${pool.length}</b>`;
+function nextQuestion(){
+  if(curDay === null) return;
+  if(curIdx >= curList.length - 1){
+    /* hoàn thành ngày */
+    state.done[curDay] = true;
+    state.pos[curDay] = curList.length;
+    saveState();
+    buildDays();
+    const dc = DAYS.filter(d => state.done[d.day]).length;
+    showMessage("🎉",
+      `<b>Hoàn thành Ngày ${curDay}!</b><br>Đã làm xong <b>${curList.length} câu</b>.<br>`
+      + (dc < 13 ? `Còn ${13 - dc} ngày nữa — chọn ngày tiếp theo nhé! 💪`
+                 : `Em đã hoàn thành CẢ 13 NGÀY! Tuyệt vời! 🏆`),
+      true);
+    el("stats").innerHTML = `Ngày ${curDay}: <b>đã xong ✓</b>`;
+    el("bar").style.width = "100%";
+    el("btnNext").textContent = "🔁 Làm lại ngày này";
+    el("btnNext").onclick = () => { state.pos[curDay] = 0; saveState(); selectDay(curDay); el("btnNext").onclick = nextQuestion; };
+    return;
+  }
+  curIdx++;
+  state.pos[curDay] = curIdx;
+  saveState();
+  render();
 }
 
-el("btnNew").onclick = nextQuestion;
+function updateStats(){
+  const total = curList.length;
+  el("stats").innerHTML =
+    `<b>Ngày ${curDay}</b> · Câu <b>${curIdx + 1}</b> / ${total}`;
+  el("bar").style.width = ((curIdx) / total * 100) + "%";
+}
+
 el("btnReveal").onclick = toggleAnswer;
-
-el("examChk").addEventListener("change", e => {
-  examOnly = e.target.checked;
-  el("examToggle").classList.toggle("on", examOnly);
-  curTopic = "__all__";
-  buildFilters(); buildTopics(); refillPool(); nextQuestion();
-});
-
+el("btnNext").onclick = nextQuestion;
 document.addEventListener("keydown", e => {
-  if(e.target.tagName === "SELECT" || e.target.tagName === "INPUT") return;
-  if(e.code === "Space"){ e.preventDefault(); current ? toggleAnswer() : nextQuestion(); }
+  if(curDay === null) return;
+  if(e.code === "Space"){ e.preventDefault(); toggleAnswer(); }
   else if(e.code === "Enter"){ e.preventDefault(); nextQuestion(); }
 });
 
 /* Khởi động */
 if(BANK.length === 0){
-  el("welcome").innerHTML =
-    '<div class="big">🚧</div><p><b>Kho câu hỏi đang được xây dựng.</b><br>'
-    + 'Các file trong thư mục <b>data/</b> sẽ xuất hiện dần.<br>'
-    + 'Mở lại trang này sau khi hoàn tất nhé!</p>';
-  el("btnNew").disabled = true;
-  el("stats").textContent = "Kho câu hỏi: 0 câu";
+  showMessage("🚧", "<b>Kho câu hỏi chưa tải được.</b><br>Hãy mở lại trang (Ctrl+F5).");
+  el("days").innerHTML = "";
 } else {
-  const examCount = BANK.filter(isExam).length;
-  buildYears(); buildFilters(); buildTopics(); refillPool();
-  el("stats").innerHTML = `Kho câu hỏi: <b>${BANK.length}</b> câu`
-    + (examCount ? ` · trong đó <b>${examCount}</b> câu ★ trọng tâm thi` : "")
-    + ` · Nhấn "Câu hỏi mới" để bắt đầu`;
+  buildDays();
 }
 </script>
 </body>
