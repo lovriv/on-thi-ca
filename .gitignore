@@ -1,0 +1,4 @@
+# Công cụ kiểm tra nội bộ — không cần đưa lên web
+_*.py
+__pycache__/
+*.pyc

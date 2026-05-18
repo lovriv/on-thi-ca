@@ -1,0 +1,16 @@
+{
+  "name": "Luyện tập Chuyên Anh Đề Án",
+  "short_name": "Ôn thi CA",
+  "description": "Flashcard luyện thi vào lớp 10 Chuyên Anh Đề Án — Toán, Khoa học, Đọc hiểu, Viết.",
+  "lang": "vi",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#e0e7ff",
+  "theme_color": "#6366f1",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

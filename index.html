@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luyện tập Flashcard — Chuyên Anh Đề Án</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6366f1">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ôn thi CA">
+<style>
+  :root{
+    --math:#3b82f6; --physics:#6366f1; --chemistry:#14b8a6;
+    --biology:#10b981; --reading:#8b5cf6; --writing:#f59e0b;
+    --ink:#1e293b; --muted:#64748b; --line:#e2e8f0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+    background:linear-gradient(160deg,#e0e7ff 0%,#f1f5f9 40%,#fce7f3 100%);
+    color:var(--ink);min-height:100vh;padding:24px 16px;
+  }
+  .app{max-width:780px;margin:0 auto;}
+
+  header{text-align:center;margin-bottom:18px;}
+  header h1{font-size:1.55rem;font-weight:800;letter-spacing:-.02em;}
+  header p{color:var(--muted);font-size:.92rem;margin-top:4px;}
+
+  /* Subject chips */
+  .filters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px;}
+  .chip{
+    border:2px solid var(--line);background:#fff;border-radius:999px;
+    padding:7px 15px;font-size:.86rem;font-weight:600;cursor:pointer;
+    color:var(--muted);transition:all .15s ease;
+  }
+  .chip:hover{transform:translateY(-1px);}
+  .chip.active{color:#fff;border-color:transparent;}
+  .chip[data-s="All"].active{background:#475569;}
+  .chip[data-s="Math"].active{background:var(--math);}
+  .chip[data-s="Physics"].active{background:var(--physics);}
+  .chip[data-s="Chemistry"].active{background:var(--chemistry);}
+  .chip[data-s="Biology"].active{background:var(--biology);}
+  .chip[data-s="Reading"].active{background:var(--reading);}
+  .chip[data-s="Writing"].active{background:var(--writing);}
+  .chip .count{opacity:.7;font-weight:500;}
+
+  /* Topic + exam-focus row */
+  .topicbar{display:flex;justify-content:center;align-items:center;gap:10px;
+    margin-bottom:18px;flex-wrap:wrap;}
+  .topicbar select{
+    font-family:inherit;font-size:.86rem;font-weight:600;color:var(--ink);
+    border:2px solid var(--line);border-radius:10px;padding:8px 14px;
+    background:#fff;cursor:pointer;max-width:100%;
+  }
+  #topicSel{min-width:240px;}
+  .topicbar select:disabled{opacity:.5;cursor:not-allowed;}
+  .examtoggle{
+    display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;
+    border:2px solid #fcd34d;background:#fffbeb;border-radius:10px;
+    padding:7px 13px;font-size:.84rem;font-weight:700;color:#b45309;
+    transition:all .15s ease;
+  }
+  .examtoggle:hover{transform:translateY(-1px);}
+  .examtoggle.on{background:#f59e0b;border-color:#f59e0b;color:#fff;}
+  .examtoggle input{display:none;}
+
+  /* Card */
+  .card{
+    background:#fff;border-radius:18px;padding:26px 24px;
+    box-shadow:0 10px 30px -12px rgba(30,41,59,.25);
+    border-top:6px solid var(--line);min-height:260px;
+  }
+  .card.s-Math{border-top-color:var(--math);}
+  .card.s-Physics{border-top-color:var(--physics);}
+  .card.s-Chemistry{border-top-color:var(--chemistry);}
+  .card.s-Biology{border-top-color:var(--biology);}
+  .card.s-Reading{border-top-color:var(--reading);}
+  .card.s-Writing{border-top-color:var(--writing);}
+
+  .tags{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+  .badge{
+    font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+    padding:4px 10px;border-radius:6px;color:#fff;
+  }
+  .badge.s-Math{background:var(--math);}
+  .badge.s-Physics{background:var(--physics);}
+  .badge.s-Chemistry{background:var(--chemistry);}
+  .badge.s-Biology{background:var(--biology);}
+  .badge.s-Reading{background:var(--reading);}
+  .badge.s-Writing{background:var(--writing);}
+  .topic{font-size:.8rem;color:var(--muted);font-weight:600;}
+  .sub{font-size:.74rem;color:#94a3b8;font-weight:600;
+    border:1px solid var(--line);padding:2px 8px;border-radius:5px;}
+  .star{font-size:.72rem;font-weight:700;color:#b45309;background:#fffbeb;
+    border:1px solid #fcd34d;padding:3px 8px;border-radius:5px;}
+
+  .passage{
+    background:#f8fafc;border:1px solid var(--line);border-radius:10px;
+    padding:14px 16px;margin-bottom:16px;max-height:240px;overflow-y:auto;
+    font-size:.86rem;line-height:1.6;
+  }
+  .passage h4{font-size:.86rem;margin-bottom:8px;color:var(--ink);}
+  .passage p{margin-bottom:8px;}
+
+  .question{font-size:1.06rem;line-height:1.6;font-weight:500;white-space:pre-wrap;}
+
+  .answer{
+    margin-top:18px;padding:16px 18px;border-radius:12px;
+    background:#ecfdf5;border:1px solid #a7f3d0;animation:pop .25s ease;
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .answer .lbl{font-size:.74rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.05em;color:#059669;margin-bottom:6px;}
+  .answer .ans-text{font-size:1.02rem;font-weight:700;line-height:1.55;margin-bottom:8px;white-space:pre-wrap;}
+  .answer .exp{font-size:.9rem;line-height:1.6;color:#334155;white-space:pre-wrap;}
+
+  .hidden{display:none;}
+
+  .welcome{text-align:center;padding:30px 10px;color:var(--muted);}
+  .welcome .big{font-size:2.6rem;margin-bottom:10px;}
+  .welcome p{line-height:1.6;}
+
+  .controls{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  button.act{
+    flex:1;min-width:150px;border:none;border-radius:12px;padding:14px 18px;
+    font-size:.98rem;font-weight:700;cursor:pointer;transition:all .15s ease;
+    font-family:inherit;
+  }
+  button.act:hover{transform:translateY(-2px);box-shadow:0 6px 16px -6px rgba(0,0,0,.3);}
+  button.act:active{transform:translateY(0);}
+  button.act:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-new{background:#475569;color:#fff;}
+  .btn-reveal{background:#059669;color:#fff;}
+
+  .stats{text-align:center;margin-top:16px;font-size:.82rem;color:var(--muted);}
+  .stats b{color:var(--ink);}
+  .hint{text-align:center;margin-top:8px;font-size:.76rem;color:#94a3b8;}
+  footer{text-align:center;margin-top:24px;font-size:.76rem;color:#94a3b8;}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>🎴 Luyện tập Flashcard</h1>
+    <p>Chuyên Anh Đề Án — Lớp 10 (Sở GD&amp;ĐT TP.HCM)</p>
+  </header>
+
+  <div class="filters" id="filters"></div>
+  <div class="topicbar">
+    <select id="yearSel"></select>
+    <select id="topicSel" disabled><option>— Tất cả chủ đề —</option></select>
+    <label class="examtoggle" id="examToggle" title="Chỉ hiện câu thuộc topic hay ra trong đề thi 2025-2026">
+      <input type="checkbox" id="examChk"> ★ Trọng tâm thi
+    </label>
+  </div>
+
+  <div class="card" id="card">
+    <div class="welcome" id="welcome">
+      <div class="big">🎲</div>
+      <p><b>Chọn môn</b> và <b>chủ đề</b> ở trên,<br>rồi nhấn <b>"Câu hỏi mới"</b> để bắt đầu!</p>
+      <p style="margin-top:10px;font-size:.85rem;">
+        Bật <b>★ Trọng tâm thi</b> để chỉ luyện topic hay ra trong đề thật.</p>
+    </div>
+
+    <div id="qcontent" class="hidden">
+      <div class="tags">
+        <span class="badge" id="badge"></span>
+        <span class="topic" id="topic"></span>
+        <span class="sub hidden" id="sub"></span>
+        <span class="star hidden" id="star">★ Trọng tâm thi</span>
+      </div>
+      <div class="passage hidden" id="passage"></div>
+      <div class="question" id="question"></div>
+      <div class="answer hidden" id="answer">
+        <div class="lbl">✅ Đáp án</div>
+        <div class="ans-text" id="ansText"></div>
+        <div class="exp" id="ansExp"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="act btn-reveal" id="btnReveal" disabled>👁️ Xem đáp án</button>
+    <button class="act btn-new" id="btnNew">🎲 Câu hỏi mới</button>
+  </div>
+
+  <div class="stats" id="stats">Đang tải kho câu hỏi…</div>
+  <div class="hint">💡 Phím tắt: <b>Space</b> = xem đáp án &nbsp;•&nbsp; <b>Enter</b> = câu mới</div>
+
+  <footer>Kho câu hỏi nhúng sẵn · chạy offline · bám đề thi Chuyên Anh Đề Án 2025-2026</footer>
+</div>
+
+<!-- ===== KHO CÂU HỎI (mỗi môn 1 file trong data/) ===== -->
+<script>window.QBANK = window.QBANK || [];</script>
+<script src="data/math.js"></script>
+<script src="data/math-b.js"></script>
+<script src="data/physics.js"></script>
+<script src="data/chemistry.js"></script>
+<script src="data/biology.js"></script>
+<script src="data/reading.js"></script>
+<script src="data/writing.js"></script>
+<script src="data/math-y8.js"></script>
+<script src="data/science-y8.js"></script>
+
+<!-- ===== LOGIC ỨNG DỤNG ===== -->
+<script>
+const SUBJ_ORDER = ["Math","Physics","Chemistry","Biology","Reading","Writing"];
+const SUBJ_VN = {All:"Tất cả",Math:"Toán",Physics:"Vật lý",Chemistry:"Hóa học",
+                 Biology:"Sinh học",Reading:"Đọc hiểu",Writing:"Viết"};
+
+const BANK = (window.QBANK || []).filter(q => q && q.q && q.a);
+
+let curSubject = "All";
+let curTopic   = "__all__";
+let curYear    = "all";
+let examOnly   = false;
+let pool = [], current = null, seenCount = 0, answerShown = false;
+
+const el = id => document.getElementById(id);
+const isExam = q => q.exam === true;
+const yearMatch = q => curYear === "all" || String(q.year) === curYear;
+
+/* Danh sách môn thực sự có câu hỏi */
+function subjectsPresent(){
+  return SUBJ_ORDER.filter(s => BANK.some(q => q.s === s && yearMatch(q)));
+}
+/* Chủ đề của 1 môn, theo thứ tự xuất hiện trong dữ liệu */
+function topicsOf(subject){
+  const seen = [], out = [];
+  BANK.forEach(q => {
+    if(q.s === subject && q.topic && yearMatch(q) && !seen.includes(q.topic)){
+      seen.push(q.topic); out.push(q.topic);
+    }
+  });
+  return out;
+}
+/* 1 topic là "trọng tâm thi" nếu mọi câu trong đó đều exam:true */
+function topicIsFocus(subject, topic){
+  const qs = BANK.filter(q => q.s === subject && q.topic === topic);
+  return qs.length > 0 && qs.every(isExam);
+}
+/* Đếm câu theo bộ lọc exam hiện tại */
+function countFor(subject){
+  return BANK.filter(q => (subject === "All" || q.s === subject)
+                          && yearMatch(q)
+                          && (!examOnly || isExam(q))).length;
+}
+
+/* Bộ chọn Lớp (8 / 9) — chỉ hiện lớp có dữ liệu */
+function buildYears(){
+  const sel = el("yearSel");
+  const years = [...new Set(BANK.map(q => q.year).filter(Boolean))].sort((a,b) => b - a);
+  sel.innerHTML = '<option value="all">📅 Tất cả lớp</option>'
+    + years.map(y => `<option value="${y}">Lớp ${y}</option>`).join("");
+  sel.value = curYear;
+  sel.onchange = () => {
+    curYear = sel.value; curSubject = "All"; curTopic = "__all__";
+    buildFilters(); buildTopics(); refillPool(); nextQuestion();
+  };
+}
+
+function buildFilters(){
+  const box = el("filters"); box.innerHTML = "";
+  const subs = ["All", ...subjectsPresent()];
+  subs.forEach(s => {
+    const chip = document.createElement("button");
+    chip.className = "chip" + (s === curSubject ? " active" : "");
+    chip.dataset.s = s;
+    chip.innerHTML = `${SUBJ_VN[s]} <span class="count">(${countFor(s)})</span>`;
+    chip.onclick = () => {
+      curSubject = s; curTopic = "__all__";
+      buildFilters(); buildTopics(); refillPool(); nextQuestion();
+    };
+    box.appendChild(chip);
+  });
+}
+
+function buildTopics(){
+  const sel = el("topicSel"); sel.innerHTML = "";
+  if(curSubject === "All"){
+    sel.disabled = true;
+    sel.innerHTML = '<option>— Chọn một môn để lọc chủ đề —</option>';
+    return;
+  }
+  sel.disabled = false;
+  const total = BANK.filter(q => q.s === curSubject && yearMatch(q) && (!examOnly || isExam(q))).length;
+  const allOpt = document.createElement("option");
+  allOpt.value = "__all__";
+  allOpt.textContent = `— Tất cả chủ đề (${total} câu) —`;
+  sel.appendChild(allOpt);
+  topicsOf(curSubject).forEach(t => {
+    const n = BANK.filter(q => q.s === curSubject && q.topic === t
+                               && yearMatch(q) && (!examOnly || isExam(q))).length;
+    if(examOnly && n === 0) return;
+    const o = document.createElement("option");
+    o.value = t;
+    o.textContent = (topicIsFocus(curSubject, t) ? "★ " : "") + t + `  (${n})`;
+    sel.appendChild(o);
+  });
+  sel.value = curTopic;
+  if(sel.value !== curTopic){ curTopic = "__all__"; sel.value = "__all__"; }
+  sel.onchange = () => { curTopic = sel.value; refillPool(); nextQuestion(); };
+}
+
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function filteredQuestions(){
+  return BANK.filter(q => {
+    if(curSubject !== "All" && q.s !== curSubject) return false;
+    if(curSubject !== "All" && curTopic !== "__all__" && q.topic !== curTopic) return false;
+    if(!yearMatch(q)) return false;
+    if(examOnly && !isExam(q)) return false;
+    return true;
+  });
+}
+
+function refillPool(){ pool = shuffle(filteredQuestions().slice()); }
+
+function nextQuestion(){
+  if(pool.length === 0) refillPool();
+  if(pool.length === 0){ showEmpty(); return; }
+  let next = pool.pop();
+  if(next === current && pool.length > 0){ pool.unshift(next); next = pool.pop(); }
+  current = next; answerShown = false;
+  renderCard(); seenCount++; updateStats();
+}
+
+function showEmpty(){
+  el("qcontent").classList.add("hidden");
+  el("welcome").classList.remove("hidden");
+  el("welcome").innerHTML =
+    '<div class="big">📭</div><p>Chưa có câu hỏi cho lựa chọn này.<br>'
+    + 'Thử tắt <b>★ Trọng tâm thi</b> hoặc chọn môn / chủ đề khác nhé!</p>';
+  el("btnReveal").disabled = true;
+}
+
+function renderCard(){
+  el("welcome").classList.add("hidden");
+  el("qcontent").classList.remove("hidden");
+  el("card").className = "card s-" + current.s;
+
+  el("badge").className = "badge s-" + current.s;
+  el("badge").textContent = SUBJ_VN[current.s] || current.s;
+  el("topic").textContent = current.topic || "";
+
+  const subEl = el("sub");
+  if(current.sub){ subEl.textContent = current.sub; subEl.classList.remove("hidden"); }
+  else subEl.classList.add("hidden");
+
+  el("star").classList.toggle("hidden", !isExam(current));
+
+  const pBox = el("passage");
+  if(current.p && current.p.html){
+    pBox.innerHTML = (current.p.title ? `<h4>📖 ${current.p.title}</h4>` : "") + current.p.html;
+    pBox.classList.remove("hidden"); pBox.scrollTop = 0;
+  } else pBox.classList.add("hidden");
+
+  el("question").textContent = current.q;
+  el("answer").classList.add("hidden");
+  el("ansText").textContent = current.a;
+  el("ansExp").innerHTML = current.e || "";
+
+  el("btnReveal").disabled = false;
+  el("btnReveal").textContent = "👁️ Xem đáp án";
+}
+
+function toggleAnswer(){
+  if(!current) return;
+  answerShown = !answerShown;
+  el("answer").classList.toggle("hidden", !answerShown);
+  el("btnReveal").textContent = answerShown ? "🙈 Ẩn đáp án" : "👁️ Xem đáp án";
+}
+
+function updateStats(){
+  const yr = curYear === "all" ? "" : "Lớp " + curYear + " · ";
+  const scope = curSubject === "All" ? "Tất cả môn"
+    : SUBJ_VN[curSubject] + (curTopic === "__all__" ? "" : " · " + curTopic);
+  el("stats").innerHTML =
+    `Phạm vi: <b>${yr}${scope}</b>${examOnly ? " <b>★</b>" : ""} · `
+    + `Đã xem: <b>${seenCount}</b> câu · Còn lại: <b>${pool.length}</b>`;
+}
+
+el("btnNew").onclick = nextQuestion;
+el("btnReveal").onclick = toggleAnswer;
+
+el("examChk").addEventListener("change", e => {
+  examOnly = e.target.checked;
+  el("examToggle").classList.toggle("on", examOnly);
+  curTopic = "__all__";
+  buildFilters(); buildTopics(); refillPool(); nextQuestion();
+});
+
+document.addEventListener("keydown", e => {
+  if(e.target.tagName === "SELECT" || e.target.tagName === "INPUT") return;
+  if(e.code === "Space"){ e.preventDefault(); current ? toggleAnswer() : nextQuestion(); }
+  else if(e.code === "Enter"){ e.preventDefault(); nextQuestion(); }
+});
+
+/* Khởi động */
+if(BANK.length === 0){
+  el("welcome").innerHTML =
+    '<div class="big">🚧</div><p><b>Kho câu hỏi đang được xây dựng.</b><br>'
+    + 'Các file trong thư mục <b>data/</b> sẽ xuất hiện dần.<br>'
+    + 'Mở lại trang này sau khi hoàn tất nhé!</p>';
+  el("btnNew").disabled = true;
+  el("stats").textContent = "Kho câu hỏi: 0 câu";
+} else {
+  const examCount = BANK.filter(isExam).length;
+  buildYears(); buildFilters(); buildTopics(); refillPool();
+  el("stats").innerHTML = `Kho câu hỏi: <b>${BANK.length}</b> câu`
+    + (examCount ? ` · trong đó <b>${examCount}</b> câu ★ trọng tâm thi` : "")
+    + ` · Nhấn "Câu hỏi mới" để bắt đầu`;
+}
+</script>
+</body>
+</html>
