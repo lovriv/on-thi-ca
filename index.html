@@ -124,6 +124,21 @@
   .stats{text-align:center;margin-top:10px;font-size:.84rem;color:var(--muted);}
   .stats b{color:var(--ink);}
   .stats .sOk{color:var(--ok);} .stats .sBad{color:var(--bad);}
+  .reprow{text-align:center;margin-bottom:16px;}
+  .reportbtn{border:2px solid #6366f1;background:#fff;color:#6366f1;border-radius:10px;
+    padding:8px 16px;font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer;}
+  .reportbtn:hover{background:#6366f1;color:#fff;}
+  #report h3{font-size:1.1rem;margin-bottom:6px;}
+  #report .rsum{font-size:.88rem;color:var(--muted);margin-bottom:14px;line-height:1.7;}
+  #report table{width:100%;border-collapse:collapse;font-size:.86rem;}
+  #report th,#report td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:center;}
+  #report th{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;}
+  #report td.dname{text-align:left;font-weight:700;cursor:pointer;color:#6366f1;}
+  #report tr.rdone{background:#f0fdf4;}
+  #report .st-done{color:var(--done);font-weight:700;}
+  #report .st-prog{color:#b45309;font-weight:700;}
+  #report .st-none{color:#94a3b8;}
+  #report .rnote{margin-top:10px;font-size:.78rem;color:#94a3b8;line-height:1.6;}
   footer{text-align:center;margin-top:22px;font-size:.76rem;color:#94a3b8;}
 </style>
 </head>
@@ -136,6 +151,7 @@
 
   <div class="days" id="days"></div>
   <div class="overall" id="overall"></div>
+  <div class="reprow"><button id="btnReport" class="reportbtn">📊 Xem báo cáo kết quả</button></div>
 
   <div class="card" id="card">
     <div class="welcome" id="welcome">
@@ -169,9 +185,10 @@
         <div class="exp" id="ansExp"></div>
       </div>
     </div>
+    <div id="report" class="hidden"></div>
   </div>
 
-  <div class="controls">
+  <div class="controls" id="controls">
     <button class="act btn-prev" id="btnPrev" disabled>◀ Câu trước</button>
     <button class="act btn-next" id="btnNext" disabled>Câu tiếp theo ▶</button>
   </div>
@@ -243,6 +260,20 @@ function loadState(){
 }
 function saveState(){ try { localStorage.setItem(SAVEKEY, JSON.stringify(state)); } catch(e){} }
 let state = loadState();
+/* Khôi phục tiến độ từ bản app trước (nếu có). SAVEKEY giữ nguyên từ đây để không mất dữ liệu. */
+(function migrate(){
+  if(Object.keys(state).length > 0) return;
+  let old = null;
+  try { old = JSON.parse(localStorage.getItem("onthi_ca_13ngay")); } catch(e){}
+  if(old && (old.done || old.pos)){
+    DAYS.forEach(d => {
+      const wasDone = old.done && old.done[d.day];
+      const oldPos = (old.pos && old.pos[d.day]) || 0;
+      if(wasDone || oldPos > 0) state[d.day] = { pos:oldPos, done:!!wasDone, rec:[] };
+    });
+    if(Object.keys(state).length > 0) saveState();
+  }
+})();
 function dayRec(n){
   if(!state[n]) state[n] = { pos:0, done:false, rec:[] };
   const len = dayQ[n].length;
@@ -250,7 +281,7 @@ function dayRec(n){
   return state[n];
 }
 
-let curDay = null, curList = [], curIdx = 0;
+let curDay = null, curList = [], curIdx = 0, reportOpen = false;
 
 /* ---- Chuẩn hoá để so đáp án ---- */
 function norm(s){
@@ -295,6 +326,7 @@ function buildDays(){
 }
 
 function selectDay(n){
+  if(reportOpen) closeReport(true);
   curDay = n; curList = dayQ[n];
   if(curList.length === 0){
     buildDays();
@@ -476,9 +508,67 @@ el("btnPrev").onclick = () => {
 };
 el("btnNext").onclick = () => go(1);
 
+function openReport(){
+  let tDone=0,tOk=0,tBad=0,tQ=0,daysDone=0,rows="";
+  DAYS.forEach(d => {
+    const total = dayQ[d.day].length; tQ += total;
+    const st = state[d.day];
+    let done=0,ok=0,bad=0;
+    if(st && st.rec) st.rec.forEach(r => {
+      if(r.v !== null && r.v !== undefined) done++;
+      if(r.v === 1) ok++; else if(r.v === 0) bad++;
+    });
+    const isDone = st && st.done;
+    if(isDone) daysDone++;
+    tDone+=done; tOk+=ok; tBad+=bad;
+    let status, cls;
+    if(isDone){ status="✓ Hoàn thành"; cls="st-done"; }
+    else if(done>0){ status="⏳ Đang làm"; cls="st-prog"; }
+    else { status="Chưa làm"; cls="st-none"; }
+    rows += `<tr class="${isDone?'rdone':''}">`
+      + `<td class="dname" data-d="${d.day}">Ngày ${d.day}</td>`
+      + `<td>${done}/${total}</td>`
+      + `<td style="color:#059669;font-weight:700">${ok}</td>`
+      + `<td style="color:#dc2626;font-weight:700">${bad}</td>`
+      + `<td class="${cls}">${status}</td></tr>`;
+  });
+  const graded = tOk + tBad;
+  el("report").innerHTML =
+    `<h3>📊 Báo cáo kết quả</h3>`
+    + `<div class="rsum">Hoàn thành <b>${daysDone}/13</b> ngày &nbsp;·&nbsp; Đã làm <b>${tDone}</b>/${tQ} câu<br>`
+    + `<span style="color:#059669;font-weight:700">Đúng ${tOk}</span> &nbsp;·&nbsp; `
+    + `<span style="color:#dc2626;font-weight:700">Sai ${tBad}</span>`
+    + (graded ? ` &nbsp;(${Math.round(tOk/graded*100)}% đúng)` : ``) + `</div>`
+    + `<table><tr><th>Ngày</th><th>Đã làm</th><th>Đúng</th><th>Sai</th><th>Trạng thái</th></tr>`
+    + rows + `</table>`
+    + `<div class="rnote">👆 Bấm tên ngày để mở ngày đó.<br>`
+    + `⚠️ Tiến độ lưu riêng trên <b>từng thiết bị + trình duyệt</b> — muốn xem bài của bé, hãy mở trên đúng máy/trình duyệt bé đã học.</div>`;
+  el("report").querySelectorAll(".dname").forEach(td => {
+    td.onclick = () => selectDay(parseInt(td.getAttribute("data-d")));
+  });
+  el("welcome").classList.add("hidden");
+  el("qcontent").classList.add("hidden");
+  el("controls").classList.add("hidden");
+  el("report").classList.remove("hidden");
+  el("btnReport").textContent = "← Quay lại luyện tập";
+  reportOpen = true;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function closeReport(silent){
+  el("report").classList.add("hidden");
+  el("controls").classList.remove("hidden");
+  el("btnReport").textContent = "📊 Xem báo cáo kết quả";
+  reportOpen = false;
+  if(silent) return;
+  if(curDay === null) el("welcome").classList.remove("hidden");
+  else render();
+}
+el("btnReport").onclick = () => { reportOpen ? closeReport() : openReport(); };
+
 if(BANK.length === 0){
   el("welcome").innerHTML = '<div class="big">🚧</div><p><b>Kho câu hỏi chưa tải được.</b><br>Hãy mở lại trang (Ctrl+F5).</p>';
   el("days").innerHTML = "";
+  el("btnReport").style.display = "none";
 } else {
   buildDays();
 }
